@@ -57,7 +57,7 @@ if($pay['limit']!=0)
 				$nh=3600*$pay['first_days'];
 					$sum=$CellValue['summ']*$perc;
 								$DATABASE->query("UPDATE `users` SET `balance`=`balance`+'".$sum."',`from_invests`=`from_invests`+'".$sum."' where `id`='".$CellValue['ident']."'");
-			$DATABASE->query("INSERT INTO `history` (`ident`,`date`,`text`) values ('".$CellValue['ident']."','".time()."','Начислено ".$pay['first_perc']." % к вашему вкладу')");
+			$DATABASE->query("INSERT INTO `history` (`ident`,`date`,`text`) values ('".$CellValue['ident']."','".time()."','РќР°С‡РёСЃР»РµРЅРѕ ".$pay['first_perc']." % Рє РІР°С€РµРјСѓ РІРєР»Р°РґСѓ')");
 			$DATABASE->query("UPDATE `deposits` SET `percent`=`percent`+'".$pay['first_perc']."',`last`=`last`+'".$nh."' WHERE `id`='".$CellValue['id']."'");
 			
 			}elseif($CellValue['last']<time()-3600*$pay['next_days'])
@@ -66,7 +66,7 @@ if($pay['limit']!=0)
 				$nh=3600*$pay['next_days'];
 				$sum=$CellValue['summ']*$perc;
 								$DATABASE->query("UPDATE `users` SET `balance`=`balance`+'".$sum."',`from_invests`=`from_invests`+'".$sum."' where `id`='".$CellValue['ident']."'");
-			$DATABASE->query("INSERT INTO `history` (`ident`,`date`,`text`) values ('".$CellValue['ident']."','".time()."','Начислено ".$pay['next_perc']." % к вашему вкладу')");
+			$DATABASE->query("INSERT INTO `history` (`ident`,`date`,`text`) values ('".$CellValue['ident']."','".time()."','РќР°С‡РёСЃР»РµРЅРѕ ".$pay['next_perc']." % Рє РІР°С€РµРјСѓ РІРєР»Р°РґСѓ')");
 			$DATABASE->query("UPDATE `deposits` SET `percent`=`percent`+'".$pay['next_perc']."',`last`=`last`+'".$nh."' WHERE `id`='".$CellValue['id']."'");
 			
 			}
@@ -82,18 +82,18 @@ if(isset($_POST['login']) && !isset($_SESSION['id']))
 	$pass=$_POST['pass'];
 	if(!preg_match("/^[a-zA-Z0-9]+$/",$login) OR $login=='')
 	{
-		$error="Некорректно введено имя пользователя";
+		$error="РќРµРєРѕСЂСЂРµРєС‚РЅРѕ РІРІРµРґРµРЅРѕ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ";
 	}elseif(!preg_match("/^[a-zA-Z0-9]+$/",$pass) OR $pass=='')
 	{
-		$error="Некорректно введён пароль";
+		$error="РќРµРєРѕСЂСЂРµРєС‚РЅРѕ РІРІРµРґС‘РЅ РїР°СЂРѕР»СЊ";
 	}elseif(!$DATABASE->SelectRow("SELECT * FROM `users` WHERE `login`='".$login."' AND `password`='".md5(md5($pass))."'"))
 	{	
-		$error="Пользователь с указанными данными не зарегистрирован";
+		$error="РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ СѓРєР°Р·Р°РЅРЅС‹РјРё РґР°РЅРЅС‹РјРё РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ";
 	}else{
 		$check=$DATABASE->SelectRow("SELECT * FROM `users` WHERE `login`='".$login."' AND `password`='".md5(md5($pass))."'");
 		$_SESSION['id']=$check['id'];
 		$_SESSION['login']=$check['login'];	
-		$good="Авторизация прошла успешно...перенаправляем в аккаунт.<meta http-equiv='Refresh' Content='1; URL=/index.php?page=account'>";
+		$good="РђРІС‚РѕСЂРёР·Р°С†РёСЏ РїСЂРѕС€Р»Р° СѓСЃРїРµС€РЅРѕ...РїРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј РІ Р°РєРєР°СѓРЅС‚.<meta http-equiv='Refresh' Content='1; URL=/index.php?page=account'>";
 	}
 }
 if(isset($_SESSION['id']))
@@ -146,33 +146,33 @@ if(isset($_GET['page']))
 switch($page)
 {
 	case 'admin': require CORE_DIR.'/admin/index.php'; exit; break;
-	case 'faq': $pagename='Помощь';require CORE_DIR.'/pages/faq.php'; break;
-	case 'reviews': $pagename='Отзывы участников';require CORE_DIR.'/pages/reviews.php'; break;
-	case 'news': $pagename='Новости системы';require CORE_DIR.'/pages/news.php'; break;
-	case 'register': $pagename='Регистрация'; require CORE_DIR.'/pages/register.php'; break;
-	case 'account': $pagename='Личный кабинет'; require CORE_DIR.'/pages/account.php'; break;
-	case 'referals': $pagename='Ваши рефералы'; require CORE_DIR.'/pages/reflist.php'; break;
-	case 'deposits': $pagename='Ваши вклады'; require CORE_DIR.'/pages/deposits.php'; break;
-	case 'paidouts': $pagename='Ваши выплаты'; require CORE_DIR.'/pages/paidouts.php'; break;
-	case 'history': $pagename='История операций'; require CORE_DIR.'/pages/history.php'; break;
-	case 'reflinks': $pagename='Рекламные материалы'; require CORE_DIR.'/pages/reflinks.php'; break;
-	case 'edit': $pagename='Личные данные'; require CORE_DIR.'/pages/edit.php'; break;
-	case 'partners': $pagename='ТОП 10 партнёров'; require CORE_DIR.'/pages/partners.php'; break;
-	case 'investors': $pagename='ТОП 10 инвесторов'; require CORE_DIR.'/pages/investors.php'; break;
-	case 'addinvest': $pagename='Создание вклада'; require CORE_DIR.'/pages/addinvest.php'; break;
-	case 'paidout': $pagename='Заказ выплаты'; require CORE_DIR.'/pages/paidout.php'; break;
-	case 'perfect': $pagename='Заказ выплаты'; require CORE_DIR.'/pages/perfect.php'; exit; break;
-	case 'deltakey': $pagename='Заказ выплаты'; require CORE_DIR.'/pages/deltakey.php'; exit; break;
-	case 'interkassa': $pagename='Заказ выплаты'; require CORE_DIR.'/pages/interkassa.php'; exit; break;
-	case 'exit': $pagename='Выход из аккаунта'; unset($_SESSION['login']);unset($_SESSION['id']);
-	$good="Приходите ещё...<meta http-equiv='Refresh' Content='1; URL=/index.php'>";
+	case 'faq': $pagename='РџРѕРјРѕС‰СЊ';require CORE_DIR.'/pages/faq.php'; break;
+	case 'reviews': $pagename='РћС‚Р·С‹РІС‹ СѓС‡Р°СЃС‚РЅРёРєРѕРІ';require CORE_DIR.'/pages/reviews.php'; break;
+	case 'news': $pagename='РќРѕРІРѕСЃС‚Рё СЃРёСЃС‚РµРјС‹';require CORE_DIR.'/pages/news.php'; break;
+	case 'register': $pagename='Р РµРіРёСЃС‚СЂР°С†РёСЏ'; require CORE_DIR.'/pages/register.php'; break;
+	case 'account': $pagename='Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚'; require CORE_DIR.'/pages/account.php'; break;
+	case 'referals': $pagename='Р’Р°С€Рё СЂРµС„РµСЂР°Р»С‹'; require CORE_DIR.'/pages/reflist.php'; break;
+	case 'deposits': $pagename='Р’Р°С€Рё РІРєР»Р°РґС‹'; require CORE_DIR.'/pages/deposits.php'; break;
+	case 'paidouts': $pagename='Р’Р°С€Рё РІС‹РїР»Р°С‚С‹'; require CORE_DIR.'/pages/paidouts.php'; break;
+	case 'history': $pagename='РСЃС‚РѕСЂРёСЏ РѕРїРµСЂР°С†РёР№'; require CORE_DIR.'/pages/history.php'; break;
+	case 'reflinks': $pagename='Р РµРєР»Р°РјРЅС‹Рµ РјР°С‚РµСЂРёР°Р»С‹'; require CORE_DIR.'/pages/reflinks.php'; break;
+	case 'edit': $pagename='Р›РёС‡РЅС‹Рµ РґР°РЅРЅС‹Рµ'; require CORE_DIR.'/pages/edit.php'; break;
+	case 'partners': $pagename='РўРћРџ 10 РїР°СЂС‚РЅС‘СЂРѕРІ'; require CORE_DIR.'/pages/partners.php'; break;
+	case 'investors': $pagename='РўРћРџ 10 РёРЅРІРµСЃС‚РѕСЂРѕРІ'; require CORE_DIR.'/pages/investors.php'; break;
+	case 'addinvest': $pagename='РЎРѕР·РґР°РЅРёРµ РІРєР»Р°РґР°'; require CORE_DIR.'/pages/addinvest.php'; break;
+	case 'paidout': $pagename='Р—Р°РєР°Р· РІС‹РїР»Р°С‚С‹'; require CORE_DIR.'/pages/paidout.php'; break;
+	case 'perfect': $pagename='Р—Р°РєР°Р· РІС‹РїР»Р°С‚С‹'; require CORE_DIR.'/pages/perfect.php'; exit; break;
+	case 'deltakey': $pagename='Р—Р°РєР°Р· РІС‹РїР»Р°С‚С‹'; require CORE_DIR.'/pages/deltakey.php'; exit; break;
+	case 'interkassa': $pagename='Р—Р°РєР°Р· РІС‹РїР»Р°С‚С‹'; require CORE_DIR.'/pages/interkassa.php'; exit; break;
+	case 'exit': $pagename='Р’С‹С…РѕРґ РёР· Р°РєРєР°СѓРЅС‚Р°'; unset($_SESSION['login']);unset($_SESSION['id']);
+	$good="РџСЂРёС…РѕРґРёС‚Рµ РµС‰С‘...<meta http-equiv='Refresh' Content='1; URL=/index.php'>";
 	break;
 	default: 
 		$content=@file_get_contents(CACHE_DIR.'/'.$page.'.php');
 		$main_page=1;
 		if($content=='')
 		{
-			 $pagename='О программе '.$cfg['sitename']; require CORE_DIR.'/pages/first.php';
+			 $pagename='Рћ РїСЂРѕРіСЂР°РјРјРµ '.$cfg['sitename']; require CORE_DIR.'/pages/first.php';
 		}else{
 			$opage=$DATABASE->SelectRow("SELECT * FROM `pages` WHERE `name`='".$page."'");
 			$pagename=$opage['nazn'];
@@ -182,8 +182,8 @@ switch($page)
 }; 
 }else{
 
- $pagename='О программе '.$cfg['sitename']; require CORE_DIR.'/pages/first.php';
-}$us_pages=array('paidout','addinvest','referals','edit','reflinks','history','deposits','account','paidouts','exit');if(in_array($page,$us_pages) && !isset($_SESSION['id'])){ $error='Для доступа к этой странице необходима авторизация'; $content='';}
+ $pagename='Рћ РїСЂРѕРіСЂР°РјРјРµ '.$cfg['sitename']; require CORE_DIR.'/pages/first.php';
+}$us_pages=array('paidout','addinvest','referals','edit','reflinks','history','deposits','account','paidouts','exit');if(in_array($page,$us_pages) && !isset($_SESSION['id'])){ $error='Р”Р»СЏ РґРѕСЃС‚СѓРїР° Рє СЌС‚РѕР№ СЃС‚СЂР°РЅРёС†Рµ РЅРµРѕР±С…РѕРґРёРјР° Р°РІС‚РѕСЂРёР·Р°С†РёСЏ'; $content='';}
 if(!empty($error))
 {
 	$view->set('alert', $error);
